@@ -29,8 +29,6 @@ class Map {
 				//Line the map with walls
 				if (i == 0 or j == 0 or i == SIZE-1 or j == SIZE-1) 
 					map.at(i).at(j) = WALL;
-				else if (i == SIZE/2 and j == SIZE/2) 
-					map.at(i).at(j) = HERO;
 				else {
 					//5% chance of monster
 					if (d100(gen) <= 5) {
@@ -88,15 +86,21 @@ class Map {
 					color = 5;
 				else if (map.at(i).at(j) == WATER)
 					color = 2;
-				else if (map.at(i).at(j) == HERO)
-					color = 3;
 				else if (map.at(i).at(j) == TREASURE)
 					color = 4;
 				else if (map.at(i).at(j) == MONSTER)
 					color = 6;
-
-				attron(COLOR_PAIR(color));
-				mvaddch(i-start_y,j-start_x,map.at(i).at(j));
+				if (i == y && j == x) {
+					color = 3;
+				}
+				if (i == y && j == x) {
+					color = 3;
+					attron(COLOR_PAIR(color));
+					mvaddch(i-start_y,j-start_x, HERO);
+				} else {
+					attron(COLOR_PAIR(color));
+					mvaddch(i-start_y,j-start_x,map.at(i).at(j));
+				}
 				attroff(COLOR_PAIR(color));
 				//attroff(A_UNDERLINE | A_BOLD);
 			}
@@ -104,5 +108,10 @@ class Map {
 	}
 	Map() {
 		init_map();
+	}
+
+	//returns whatever character is in the map at the provided coordinates
+	char spot_data(int x, int y) {
+		return map.at(y).at(x);
 	}
 };

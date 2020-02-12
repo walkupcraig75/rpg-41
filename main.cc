@@ -25,23 +25,31 @@ void turn_on_ncurses() {
 int main() {
 	turn_on_ncurses();
 	Map map;
+	//map constants
+	const char HERO     = 'H';
+	const char MONSTER  = 'M';
+	const char WALL     = '#';
+	const char WATER    = '~';
+	const char OPEN     = '.';
+	const char TREASURE = '$';
+	
 	int x = Map::SIZE / 2, y = Map::SIZE / 2; //Start in middle of the world
 	while (true) {
 		int ch = getch(); // Wait for user input, with TIMEOUT delay
 		if (ch == 'q' || ch == 'Q') break;
-		else if (ch == RIGHT) {
+		else if (ch == RIGHT && map.spot_data(x + 1, y) != WALL) {
 			x++;
 			if (y >= Map::SIZE) y = Map::SIZE - 1; //Clamp value
 		}
-		else if (ch == LEFT) {
+		else if (ch == LEFT && map.spot_data(x - 1, y) != WALL) {
 			x--;
 			if (y < 0) y = 0;
 		}
-		else if (ch == UP) {
+		else if (ch == UP && map.spot_data(x, y - 1) != WALL) {
 			y--;
 			if (x < 0) x = 0;
 		}
-		else if (ch == DOWN) {
+		else if (ch == DOWN && map.spot_data(x, y + 1) != WALL) {
 			y++;
 			if (x >= Map::SIZE) x = Map::SIZE - 1; //Clamp value
 		}

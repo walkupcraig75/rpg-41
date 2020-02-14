@@ -3,7 +3,7 @@
 using namespace std;
 
 class Fighter {
-	private:
+	protected:
 		string name;
 		int hp;
 		int attack;
@@ -28,3 +28,4 @@ class Fighter {
 };
 
 ostream& operator<<(ostream&, Fighter);
+

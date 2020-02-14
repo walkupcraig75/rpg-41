@@ -31,8 +31,3 @@ ostream& operator<<(ostream& outs, Fighter f) {
 	return outs;
 } 
 
-//for testing purposes DELETE LATER
-int main() {
-	Fighter f("Slime", 10, 2, 0.5, 3);
-	cout << f << endl;
-}

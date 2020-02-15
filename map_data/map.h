@@ -23,7 +23,7 @@ class Map {
 	static const size_t DISPLAY = 19; //Show a 10x10 area at a time
 	//Randomly generate map
 	void init_map() {
-		string filename = "map_data/room_01.txt";
+		string filename = "room_01.txt";
 		ifstream ins(filename);
 		while (ins) {
 			string s;

@@ -1,7 +1,7 @@
 #include "map.h"
 #include <unistd.h>
 
-const unsigned int TIMEOUT = 20; //Milliseconds to wait for a getch to finish
+const unsigned int TIMEOUT = 10; //Milliseconds to wait for a getch to finish
 const int UP = 65; //Key code for up arrow
 const int DOWN = 66;
 const int LEFT = 68;
@@ -23,41 +23,47 @@ void turn_on_ncurses() {
 }
 
 int main() {
-	//turn_on_ncurses();
+	turn_on_ncurses();
 	Map map;
-	/*	
-	int x = Map::SIZE / 2, y = Map::SIZE / 2; //Start in middle of the world
+	//map constants
+	const char HERO     = 'H';
+	const char MONSTER  = 'M';
+	const char WALL     = '#';
+	const char WATER    = '~';
+	const char OPEN     = '.';
+	const char TREASURE = '$';
+	int x = Map::WIDTH / 2, y = Map::HEIGHT / 2; //Start in middle of the world
+	string tresh;
+
 	while (true) {
 		int ch = getch(); // Wait for user input, with TIMEOUT delay
 		if (ch == 'q' || ch == 'Q') break;
-		else if (ch == RIGHT && map.spot_data(x + 1, y) != map.WALL) {
+		else if (ch == RIGHT && map.spot_data(x + 1, y) != WALL) {
 			x++;
-			if (y >= Map::SIZE) y = Map::SIZE - 1; //Clamp value
+			if (y >= Map::HEIGHT) y = Map::HEIGHT - 1; //Clamp value
 		}
-		else if (ch == LEFT && map.spot_data(x - 1, y) != map.WALL) {
+		else if (ch == LEFT && map.spot_data(x - 1, y) != WALL) {
 			x--;
 			if (y < 0) y = 0;
 		}
-		else if (ch == UP && map.spot_data(x, y - 1) != map.WALL) {
+		else if (ch == UP && map.spot_data(x, y - 1) != WALL) {
 			y--;
 			if (x < 0) x = 0;
 		}
-		else if (ch == DOWN && map.spot_data(x, y + 1) != map.WALL) {
+		else if (ch == DOWN && map.spot_data(x, y + 1) != WALL) {
 			y++;
-			if (x >= Map::SIZE) x = Map::SIZE - 1; //Clamp value
+			if (x >= Map::WIDTH) x = Map::WIDTH - 1; //Clamp value
 		}
 		else if (ch == ERR) { //No keystroke
 			; //Do nothing
 		}
 		clear();
 		map.draw(x,y);
-		mvprintw(11,11,"X: %i Y: %i\n",x,y);
+		mvprintw(Map::DISPLAY + 1, Map::DISPLAY + 1,"X: %i Y: %i\n",x,y);
 		refresh();
 		usleep(5000);
-		
 	}
-	*/
-	//clear();
-	//endwin(); // End curses mode
-	//system("clear");
+	clear();
+	endwin(); // End curses mode
+	system("clear");
 }

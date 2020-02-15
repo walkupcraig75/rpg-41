@@ -1,11 +1,12 @@
 #pragma once
-#include <random>
 #include <vector>
+#include <cassert>
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <random>
 #include <ncurses.h>
-using namespace std;
+using namespace std; //Boo hiss
 
 class Map {
 	vector<vector<char>> map;
@@ -17,11 +18,12 @@ class Map {
 	static const char WATER    = '~';
 	static const char OPEN     = '.';
 	static const char TREASURE = '$';
-	static const size_t DISPLAY = 10; //Show a 10x10 area at a time
+	static const size_t WIDTH = 36; //World is a 100x100 map
+	static const size_t HEIGHT = 20;
+	static const size_t DISPLAY = 19; //Show a 10x10 area at a time
 	//Randomly generate map
 	void init_map() {
-		cout << "printing map\n";
-		string filename = "room_01.txt";
+		string filename = "map_data/room_01.txt";
 		ifstream ins(filename);
 		while (ins) {
 			string s;
@@ -32,15 +34,7 @@ class Map {
 			for (char c : s) { vec.push_back(c); }
 			map.push_back(vec);
 		}
-
-		cout << "finished reading data\n";
-
-		for (const vector<char> &v : map) {
-			for (const char c : v) {
-				cout << c;
-			}
-			cout << endl;
-		}
+		if (map.size() != HEIGHT && map.at(0).size() != WIDTH) cout << "error reading map\n";
 	}
 	//Draw the DISPLAY tiles around coordinate (x,y)
 	void draw(int x, int y) {
@@ -50,24 +44,24 @@ class Map {
 		int end_y = y + DISPLAY/2;
 
 		//Bounds check to handle the edges
-		/*
 		if (start_x < 0) {
 			end_x = end_x - start_x;
 			start_x = 0;
 		}
-		if (end_x > SIZE-1) {
-			start_x = start_x - (end_x - (SIZE-1));
-			end_x = SIZE-1;
+		if (end_x > WIDTH-1) {
+			start_x = start_x - (end_x - (WIDTH-1));
+			end_x = WIDTH-1;
 		}
 		if (start_y < 0) {
 			end_y = end_y - start_y;
 			start_y = 0;
 		}
-		if (end_y > SIZE-1) {
-			start_y = start_y - (end_y - (SIZE-1));
-			end_y = SIZE-1;
+		if (end_y > HEIGHT-1) {
+			start_y = start_y - (end_y - (HEIGHT-1));
+			end_y = HEIGHT-1;
 		}
-		*/
+
+		
 		//Now draw the map using NCURSES
 		for (size_t i = start_y; i <= end_y; i++) {
 			for (size_t j = start_x; j <= end_x; j++) {
@@ -97,6 +91,7 @@ class Map {
 				//attroff(A_UNDERLINE | A_BOLD);
 			}
 		}
+
 	}
 	Map() {
 		init_map();
@@ -104,6 +99,7 @@ class Map {
 
 	//returns whatever character is in the map at the provided coordinates
 	char spot_data(int x, int y) {
+		assert(x < WIDTH && y < HEIGHT && x >= 0 && y >= 0);
 		return map.at(y).at(x);
 	}
 };

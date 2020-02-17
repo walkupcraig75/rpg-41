@@ -26,18 +26,15 @@ void lose() {
 	system("figlet OVER");
 	exit(0);
 }
-void newHealth() {
-	
-}
 
 void combat_mode() {
     cout << endl;
     system("figlet -f smblock BATTLE  | lolcat"); //prints title to the screen
     cout << "(ง'̀-'́)ง" << endl;
 	Fighter f("Haigen - The Troll", 100, 10, 2, 1);
-	Hero h("Alatar - The Wizard", 100, 10, 3, 1);
-	Hero *active = &h;
-	Fighter *inactive = &f;
+	Fighter d("The Wizard", 10, 2, 0.5, 1);
+	Fighter *active = &f;
+	Fighter *inactive = &d;
 	
 	cout << "\n ✳ " << active->get_name() << " goes first.\n";
 	
@@ -50,14 +47,17 @@ void combat_mode() {
 
         cout << "\n (。_°)☆ " << endl;
         cout << "\n " << inactive->get_name() << " takes damage of " << damage << " and the hp goes from " << inactive->get_health() << " to ";
-        int newHealth = 0;
-		newHealth = inactive->get_health() - damage;
-        cout << newHealth << endl;
+        inactive->hp -= damage;
+        cout << inactive->get_health() << endl;
+        if (active == &d) {
+            active = &f;
+            inactive = &d;
+        } else {
+            active = &d;
+            inactive = &f;
 
+        }
 		
-        
-
-		/*
     cout << endl;
     cout << "✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶\n";
     system("figlet VICTORY!!!!! | lolcat");
@@ -67,8 +67,6 @@ void combat_mode() {
     cout << endl;
     cout << endl;
     cout << "✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶\n";
-    end();
-*/
 }
 }
 

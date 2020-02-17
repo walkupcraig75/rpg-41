@@ -4,11 +4,11 @@ using namespace std;
 class Fighter {
 	protected:
 		string name;
-		int hp;
 		int attack;
 		float defense;
 		int speed;
 	public:
+		int hp;
 		//PLACEHOLDER CONSTRUCTOR: DELETE LATER
 		Fighter(string name, int hp, int attack, float defense, int speed);
 		//getters

@@ -7,8 +7,8 @@ class Fighter {
 		int attack;
 		float defense;
 		int speed;
-	public:
 		int hp;
+	public:
 		//PLACEHOLDER CONSTRUCTOR: DELETE LATER
 		Fighter(string name, int hp, int attack, float defense, int speed);
 		//getters

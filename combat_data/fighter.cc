@@ -19,7 +19,22 @@ int Fighter::get_attack() { return attack; }
 float Fighter::get_defense() { return defense; }
 int Fighter::get_speed() { return speed; }
 
-
+//mutators
+void Fighter::change_name(string s) {
+	name = s;
+}
+void Fighter::change_health(int i) {
+	hp = i;
+}
+void Fighter::change_attack(int i) {
+	attack = i;
+}
+void Fighter::change_defense(float f) {
+	defense = f;
+}
+void Fighter::change_speed(int i) {
+	speed = i;
+}
 
 //operators
 ostream& operator<<(ostream& outs, Fighter f) {

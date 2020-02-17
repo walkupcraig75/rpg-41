@@ -47,7 +47,7 @@ void combat_mode() {
 
         cout << "\n (。_°)☆ " << endl;
         cout << "\n " << inactive->get_name() << " takes damage of " << damage << " and the hp goes from " << inactive->get_health() << " to ";
-        inactive->hp -= damage;
+        inactive->change_health(inactive->get_health() - damage);
         cout << inactive->get_health() << endl;
         if (active == &d) {
             active = &f;

@@ -14,7 +14,8 @@ class Map {
 	vector<vector<vector<char>>> rooms;//stores what the rooms look like (each room is a 2d vector of chars)
 	vector<vector<int>> layout;//stores which rooms are where
 	//file names of all the rooms
-	const vector<string> paths = {"room_01.txt", "room_02.txt"};
+	const vector<string> paths = {"room_01.txt", "room_02.txt", "room_03.txt"};
+	string stairs = "stairs_room.txt"; //the room with the stairs
 	default_random_engine gen;//setting up RNG
 	public:
 	static const char HERO     = 'H';
@@ -23,16 +24,18 @@ class Map {
 	static const char WATER    = '~';
 	static const char OPEN     = '.';
 	static const char TREASURE = '$';
-	static const size_t WIDTH = 216; 
-	static const size_t HEIGHT = 120;
-	static const size_t DISPLAY = 19;
-	static const size_t LAYOUT_SIZE = 6;
-	static const size_t ROOM_WIDTH = 36;
+	static const char VOID = ' ';
+	static const size_t DISPLAY = 19;//the size of the area that actually gets printed
+	static const size_t LAYOUT_SIZE = 6;//the map is LAYOUT_SIZE rooms by LAYOUT_SIZE rooms
+	static const size_t ROOM_WIDTH = 36;//the rooms are ROOM_WIDTH chars by ROOM_HEIGHT chars
 	static const size_t ROOM_HEIGHT = 20;
+	static const size_t WIDTH = 216; //the width of the area that can be printed
+	static const size_t HEIGHT = 120;//the height of the area that can be printed
 	//load map
 	void init_map() {
 		uniform_int_distribution<int> d100(1, 100);
 		layout.clear();
+		//randomly generating the layout
 		for (int i = 0; i < LAYOUT_SIZE; i++) {
 			vector<int> row;
 			for (int j = 0; j < LAYOUT_SIZE; j++) {
@@ -41,7 +44,11 @@ class Map {
 			layout.push_back(row);
 		}
 
+		load_rooms(rooms, {stairs}); //puts the staircase room at the end of vector rooms
+		layout.at(d100(gen) % LAYOUT_SIZE).at(d100(gen) % LAYOUT_SIZE) = -1;//-1 in layout corresponds to stairs
+		
 		/*
+		//couts the layout of the map
 		for (const auto &v : layout) {
 			for (int i : v) {
 				cout << i;
@@ -49,19 +56,33 @@ class Map {
 			cout << endl;
 		}
 		*/
-		//iterates through the different roooms on the y axis
+
+		//translating the layout into characters that get output on the screen (by pulling from vector rooms)
+
+		//iterates through the different roooms (in vector layout) on the y axis
 		for (int i = 0; i < LAYOUT_SIZE; i++) {
-			//iterates through contents of room on y axis
+			//iterates through contents of a room (in rooms.at(layout.at(i))) on y axis
 			for (int j = 0; j < ROOM_HEIGHT; j++) {
-				//iterates through the different rooms on the x axis
+				//iterates through the different rooms (in vector layout) on the x axis
 				vector<char> row;
 				for (int k = 0; k < LAYOUT_SIZE; k++) {
-					//iterates through contents of room on x axis
+					//iterates through contents of a room on x axis
 					for (int l = 0; l < ROOM_WIDTH; l++) {
-						row.push_back(rooms.at(layout.at(i).at(k)).at(j).at(l));
+						if (layout.at(i).at(k) == -1) row.push_back(rooms.back().at(j).at(l));
+						else row.push_back(rooms.at(layout.at(i).at(k)).at(j).at(l));
 					}
 				}
 				view.push_back(row);
+			}
+		}
+
+		//putting walls around the edges
+		for (int i = 0; i < HEIGHT; i++) {
+			for (int j = 0; j < WIDTH; j++) {
+				if (i == 0 && view.at(i + 1).at(j) != WALL && view.at(i + 1).at(j) != VOID) view.at(i).at(j) = WALL;
+				if (j == 0 && view.at(i).at(j + 1) != WALL && view.at(i).at(j + 1) != VOID) view.at(i).at(j) = WALL;
+				if (i == HEIGHT - 1 && view.at(i - 1).at(j) != WALL && view.at(i - 1).at(j) != VOID) view.at(i).at(j) = WALL;
+				if (j == WIDTH - 1 && view.at(i).at(j - 1) != WALL && view.at(i).at(j - 1) != VOID) view.at(i).at(j) = WALL;
 			}
 		}
 

@@ -32,8 +32,9 @@ int main() {
 	const char WATER    = '~';
 	const char OPEN     = '.';
 	const char TREASURE = '$';
-	int x = Map::WIDTH / 2 + 1, y = Map::HEIGHT / 2 + 1; //Start in middle of the world
+	//int x = Map::WIDTH / 2 + 1, y = Map::HEIGHT / 2 + 1; //Start in middle of the world
 	string tresh;
+	int x = 2, y = 2; //don't start in middle of the world
 
 	while (true) {
 		int ch = getch(); // Wait for user input, with TIMEOUT delay

@@ -34,6 +34,7 @@ class Map {
 	//load map
 	void init_map() {
 		uniform_int_distribution<int> d100(1, 100);
+		view.clear();
 		layout.clear();
 		//randomly generating the layout
 		for (int i = 0; i < LAYOUT_SIZE; i++) {
@@ -159,8 +160,9 @@ class Map {
 	}
 
 	//returns whatever character is in the map at the provided coordinates
-	char spot_data(int x, int y) {
+	char spot_data(int x, int y) const {
 		assert(x < WIDTH && y < HEIGHT && x >= 0 && y >= 0);
 		return view.at(y).at(x);
 	}
 };
+

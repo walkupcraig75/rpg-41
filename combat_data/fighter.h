@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 using namespace std;
-
 class Fighter {
 	protected:
 		string name;

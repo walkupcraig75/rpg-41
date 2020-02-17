@@ -1,7 +1,9 @@
 #pragma once
 #include <vector>
+#include <cassert>
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <random>
 #include <ncurses.h>
 using namespace std; //Boo hiss
@@ -16,40 +18,23 @@ class Map {
 	static const char WATER    = '~';
 	static const char OPEN     = '.';
 	static const char TREASURE = '$';
-	static const size_t SIZE = 100; //World is a 100x100 map
-	static const size_t DISPLAY = 10; //Show a 10x10 area at a time
+	static const size_t WIDTH = 36; //World is a 100x100 map
+	static const size_t HEIGHT = 20;
+	static const size_t DISPLAY = 19; //Show a 10x10 area at a time
 	//Randomly generate map
 	void init_map() {
-		uniform_int_distribution<int> d100(1,100);
-		map.clear();
-		map.resize(SIZE); //100 rows tall
-		for (auto &v : map) v.resize(SIZE,'.'); //100 columns wide
-		for (size_t i = 0; i < SIZE; i++) {
-			for (size_t j = 0; j < SIZE; j++) {
-				//Line the map with walls
-				if (i == 0 or j == 0 or i == SIZE-1 or j == SIZE-1) 
-					map.at(i).at(j) = WALL;
-				else {
-					//5% chance of monster
-					if (d100(gen) <= 5) {
-						map.at(i).at(j) = MONSTER;
-					}
-					else if (d100(gen) <= 3) {
-						map.at(i).at(j) = TREASURE;
-					}
-					else if (d100(gen) <= 10) { //10% each spot is wall
-						map.at(i).at(j) = WALL;
-					}
-					else if (d100(gen) <= 3) { //3% each spot is water
-						map.at(i).at(j) = WATER;
-					}
-					else if (d100(gen) <= 20) { //20% chance of water near other water
-						if (map.at(i-1).at(j) == WATER or map.at(i+1).at(j) == WATER or map.at(i).at(j-1) == WATER or map.at(i).at(j+1) == WATER)
-							map.at(i).at(j) = WATER;
-					}
-				}
-			}
+		string filename = "map_data/room_01.txt";
+		ifstream ins(filename);
+		while (ins) {
+			string s;
+			getline(ins, s);
+			if (!ins) break;
+			
+			vector<char> vec;
+			for (char c : s) { vec.push_back(c); }
+			map.push_back(vec);
 		}
+		if (map.size() != HEIGHT && map.at(0).size() != WIDTH) cout << "error reading map\n";
 	}
 	//Draw the DISPLAY tiles around coordinate (x,y)
 	void draw(int x, int y) {
@@ -63,19 +48,20 @@ class Map {
 			end_x = end_x - start_x;
 			start_x = 0;
 		}
-		if (end_x > SIZE-1) {
-			start_x = start_x - (end_x - (SIZE-1));
-			end_x = SIZE-1;
+		if (end_x > WIDTH-1) {
+			start_x = start_x - (end_x - (WIDTH-1));
+			end_x = WIDTH-1;
 		}
 		if (start_y < 0) {
 			end_y = end_y - start_y;
 			start_y = 0;
 		}
-		if (end_y > SIZE-1) {
-			start_y = start_y - (end_y - (SIZE-1));
-			end_y = SIZE-1;
+		if (end_y > HEIGHT-1) {
+			start_y = start_y - (end_y - (HEIGHT-1));
+			end_y = HEIGHT-1;
 		}
 
+		
 		//Now draw the map using NCURSES
 		for (size_t i = start_y; i <= end_y; i++) {
 			for (size_t j = start_x; j <= end_x; j++) {
@@ -105,6 +91,7 @@ class Map {
 				//attroff(A_UNDERLINE | A_BOLD);
 			}
 		}
+
 	}
 	Map() {
 		init_map();
@@ -112,6 +99,7 @@ class Map {
 
 	//returns whatever character is in the map at the provided coordinates
 	char spot_data(int x, int y) {
+		assert(x < WIDTH && y < HEIGHT && x >= 0 && y >= 0);
 		return map.at(y).at(x);
 	}
 };

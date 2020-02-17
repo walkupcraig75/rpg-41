@@ -25,7 +25,7 @@ class Map {
 	static const char OPEN     = '.';
 	static const char TREASURE = '$';
 	static const char VOID = ' ';
-	static const size_t DISPLAY = 19;//the size of the area that actually gets printed
+	static const size_t DISPLAY = 30;//the size of the area that actually gets printed
 	static const size_t LAYOUT_SIZE = 6;//the map is LAYOUT_SIZE rooms by LAYOUT_SIZE rooms
 	static const size_t ROOM_WIDTH = 36;//the rooms are ROOM_WIDTH chars by ROOM_HEIGHT chars
 	static const size_t ROOM_HEIGHT = 20;
@@ -129,13 +129,13 @@ class Map {
 				//if (i == cursor_x && j == cursor_y)
 				//	attron(A_UNDERLINE | A_BOLD);
 				int color = 1;
-				if (view.at(i).at(j) == WALL)
+				if (view[i][j] == WALL)
 					color = 5;
-				else if (view.at(i).at(j) == WATER)
+				else if (view[i][j] == WATER)
 					color = 2;
-				else if (view.at(i).at(j) == TREASURE)
+				else if (view[i][j] == TREASURE)
 					color = 4;
-				else if (view.at(i).at(j) == MONSTER)
+				else if (view[i][j] == MONSTER)
 					color = 6;
 				if (i == y && j == x) {
 					color = 3;
@@ -146,7 +146,7 @@ class Map {
 					mvaddch(i-start_y,j-start_x, HERO);
 				} else {
 					attron(COLOR_PAIR(color));
-					mvaddch(i-start_y,j-start_x,view.at(i).at(j));
+					mvaddch(i-start_y,j-start_x,view[i][j]);
 				}
 				attroff(COLOR_PAIR(color));
 				//attroff(A_UNDERLINE | A_BOLD);
@@ -162,7 +162,7 @@ class Map {
 	//returns whatever character is in the map at the provided coordinates
 	char spot_data(int x, int y) const {
 		assert(x < WIDTH && y < HEIGHT && x >= 0 && y >= 0);
-		return view.at(y).at(x);
+		return view[y][x];
 	}
 };
 

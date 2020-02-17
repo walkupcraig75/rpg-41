@@ -86,6 +86,14 @@ class Map {
 			}
 		}
 
+		//placing monsters and chests
+		for (int i = 0; i < HEIGHT; i++) {
+			for (int j = 0; j < WIDTH; j++) {
+				if (d100(gen) < 2 && (view.at(i).at(j) != WALL && view.at(i).at(j) != VOID)) view.at(i).at(j) = MONSTER;
+				if (d100(gen) < 2 && !(i % 3) &&  (view.at(i).at(j) != WALL && view.at(i).at(j) != VOID)) view.at(i).at(j) = TREASURE;
+			}
+		}
+
 	}
 
 	//Draw the DISPLAY tiles around coordinate (x,y)

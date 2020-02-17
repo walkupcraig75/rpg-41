@@ -5,7 +5,7 @@ using namespace std;
 
 void load_rooms(vector<vector<vector<char>>> &room_data, const vector<string> &paths) {
 	for (int i = 0; i < paths.size(); i++) {
-		ifstream ins(paths.at(i));
+		ifstream ins("map_data/" + paths.at(i));
 		
 		vector<vector<char>> col;
 		while (ins) {

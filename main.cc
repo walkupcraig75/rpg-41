@@ -6,10 +6,48 @@ const int UP = 65; //Key code for up arrow
 const int DOWN = 66;
 const int LEFT = 68;
 const int RIGHT = 67;
+const int ENTER = 10;
 
 bool is_stairs(char c) {
 	if (c == '|' || c == '-' || c == '_') return true;
 	return false;
+}
+
+//ask the user if they want to descend the stairs, entering a new map
+bool descend(int &x, int &y, Map &map) {
+	//make the text box
+	int DIALOGUE_WIDTH = 30;
+	int DIALOGUE_HEIGHT = 7;
+	for (int i = 0; i < DIALOGUE_WIDTH; i++) {
+		for (int j = 0; j < DIALOGUE_HEIGHT; j++) {\
+			char c = ' ';
+			if (j == 0 || j == DIALOGUE_HEIGHT -1 ) c = '=';
+			else if (i == 0 || i == DIALOGUE_WIDTH - 1) c = '|';
+			mvaddch(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + j, Map::DISPLAY - DIALOGUE_WIDTH + 2  + i, c);
+		}
+	}
+	//print the content
+	mvprintw(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 1, Map::DISPLAY - DIALOGUE_WIDTH + 3, "Do you want to go deeper?");
+	mvprintw(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 5, Map::DISPLAY - DIALOGUE_WIDTH + 5, "Yes");
+	mvprintw(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 5, Map::DISPLAY - DIALOGUE_WIDTH + 25, "No");
+	
+	//take the user's input
+	move(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 5, Map::DISPLAY - DIALOGUE_WIDTH + 24);
+	bool menupos = false;
+	while (true) {
+		int ch = getch();
+		if (ch == LEFT) {
+			menupos = true;
+			move(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 5, Map::DISPLAY - DIALOGUE_WIDTH + 4);
+		}
+		if (ch == RIGHT) {
+			menupos = false;
+			move(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 5, Map::DISPLAY - DIALOGUE_WIDTH + 24);
+		}
+		if (ch == ENTER) break;
+	}
+
+	return menupos;
 }
 
 void turn_on_ncurses() {
@@ -75,8 +113,13 @@ int main() {
 		mvprintw(Map::DISPLAY + 1, Map::DISPLAY + 1,"X: %i Y: %i\n",x,y);
 		refresh();
 		if (is_stairs(map.spot_data(x, y))) {
-			map.init_map();
-			start_pos(x, y, map);
+			if (descend(x, y, map)) {
+				map.init_map();
+				start_pos(x, y, map);
+			} else {
+				x -= 1;
+				y -= 3;
+			}
 		}
 		usleep(5000);
 	}

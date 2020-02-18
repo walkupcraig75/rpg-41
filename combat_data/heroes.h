@@ -26,4 +26,15 @@ class Hero {
 
 };
 
+//child classes
+class Sorcerer : public Hero {
+    public:
+        Sorcerer(int hp, int attack, float defense, int speed);
+};
+
+class Warlock : public Hero {
+    public:
+        Warlock(int hp, int attack, float defense, int speed);
+};       
+
 ostream& operator<<(ostream&, Hero);

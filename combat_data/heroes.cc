@@ -21,6 +21,10 @@ float Hero::get_defense() { return defense; }
 int Hero::get_speed() { return speed; }
 
 
+//child classes
+Warlock::Warlock(int hp, int attack, float defense, int speed) : Hero("Ganondorf - The Warlock", hp, attack, defense, speed) {};
+
+Sorcerer::Sorcerer(int hp, int attack, float defense, int speed) : Hero("Ommin - The Sorcerer", hp, attack, defense, speed) {};
 
 //operators
 ostream& operator<<(ostream& outs, Hero h) {

@@ -1,10 +1,7 @@
 //FOR TESTING PURPOSES, DELETE LATER
 #include "fighter.h"
-#include "dragon.h"
-#include "goblin.h"
+#include "monsters.h"
 #include "heroes.h"
-#include "warlock.h"
-#include "sorcerer.h"
 #include <iostream>
 using namespace std;
 

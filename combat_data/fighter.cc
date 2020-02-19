@@ -2,14 +2,30 @@
 #include <iostream>
 using namespace std;
 
-//constructor (PLACEHOLDER FOR TESTING: DELETE LATER)
-//unique constructors may be needed for child classes
+Fighter::Fighter(int lvl, string name, int hp, int attack, float defense, int speed) {
+	this->lvl = lvl;
+	this->name = name;
+	this->hp = hp * (1.1 * lvl);
+	this->attack = attack * (1.1 * lvl);
+	this->defense = defense * (1.1 * lvl);
+	this->speed = speed * (1.1 * lvl);
+}
+
 Fighter::Fighter(string name, int hp, int attack, float defense, int speed) {
+	cerr << "WARNING: unleveled Fighter constructor is deprecated.\nUse Fighter(int level, string name, int hp, int attack, float defense, int speed) instead\n";
 	this->name = name;
 	this->hp = hp;
 	this->attack = attack;
 	this->defense = defense;
 	this->speed = speed;
+}
+
+Fighter::Fighter() {
+	this->name = "";
+	this->hp = 0;
+	this->attack = 0;
+	this->defense = 0;
+	this->speed = 0;
 }
 
 //getters

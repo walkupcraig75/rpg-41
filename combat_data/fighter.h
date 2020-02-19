@@ -3,13 +3,16 @@
 using namespace std;
 class Fighter {
 	protected:
+		int lvl;
 		string name;
 		int attack;
 		float defense;
 		int speed;
 		int hp;
 	public:
-		//PLACEHOLDER CONSTRUCTOR: DELETE LATER
+		Fighter();
+		Fighter(int lvl, string name, int hp, int attack, float defense, int speed);
+		//WARNING: unleveled Fighter constructor is deprecated
 		Fighter(string name, int hp, int attack, float defense, int speed);
 		//getters
 		string get_name();

@@ -1,7 +1,7 @@
 //FOR TESTING PURPOSES, DELETE LATER
 #include "fighter.h"
 #include "monsters.h"
-#include "heroes.h"
+#include "list.h"
 #include <iostream>
 using namespace std;
 
@@ -30,6 +30,10 @@ void combat_mode() {
     cout << "(ง'̀-'́)ง" << endl;
 	Fighter f("Haigen - The Troll", 100, 10, 2, 1);
 	Fighter d("The Wizard", 10, 2, 0.5, 1);
+
+	LL* head = new LL(f, nullptr);
+	insert(head, LL(d, nullptr));
+
 	Fighter *active = &f;
 	Fighter *inactive = &d;
 	
@@ -54,6 +58,7 @@ void combat_mode() {
             inactive = &f;
 
         }
+	}
 		
     cout << endl;
     cout << "✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶\n";
@@ -64,7 +69,8 @@ void combat_mode() {
     cout << endl;
     cout << endl;
     cout << "✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶\n";
-}
+
+	delete head;
 }
 
 
@@ -72,29 +78,6 @@ void combat_mode() {
 int main() {
 	
 	//MONSTERS
-	cout << endl;
-	cout << "THE MONSTERS" << endl;
-	cout << endl;
-	Fighter f("Haigen - The Troll", 100, 2, 0.5, 4);
-	Dragon d(10, 2, 0.5, 1);
-	Goblin g(30, 2, 0.5, 1);
-	
-	cout << f << endl;
-	cout << d << endl;
-	cout << g << endl;
-
-	// HEROES
-	cout << endl;
-	cout << "THE HEROES" << endl;
-	cout << endl;
-	Warlock w(120, 2, 0.75, 3);
-	Sorcerer s(130, 2 , 0.75, 2);
-	Hero h("Alatar - The Wizard", 100, 2, 0.75, 4);
-
-	cout << w << endl;
-	cout << s << endl;
-	cout << h << endl;
-
 	int choice;
 	cout << "Fight Mode? 1.) Yes 2.)  No " << endl;
 	cin >> choice;

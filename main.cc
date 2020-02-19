@@ -6,6 +6,49 @@ const int UP = 65; //Key code for up arrow
 const int DOWN = 66;
 const int LEFT = 68;
 const int RIGHT = 67;
+const int ENTER = 10;
+
+bool is_stairs(char c) {
+	if (c == '|' || c == '-' || c == '_') return true;
+	return false;
+}
+
+//ask the user if they want to descend the stairs, entering a new map
+bool descend(int &x, int &y, Map &map) {
+	//make the text box
+	int DIALOGUE_WIDTH = 30;
+	int DIALOGUE_HEIGHT = 7;
+	for (int i = 0; i < DIALOGUE_WIDTH; i++) {
+		for (int j = 0; j < DIALOGUE_HEIGHT; j++) {\
+			char c = ' ';
+			if (j == 0 || j == DIALOGUE_HEIGHT -1 ) c = '=';
+			else if (i == 0 || i == DIALOGUE_WIDTH - 1) c = '|';
+			mvaddch(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + j, Map::DISPLAY - DIALOGUE_WIDTH + 2  + i, c);
+		}
+	}
+	//print the content
+	mvprintw(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 1, Map::DISPLAY - DIALOGUE_WIDTH + 3, "Do you want to go deeper?");
+	mvprintw(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 5, Map::DISPLAY - DIALOGUE_WIDTH + 5, "Yes");
+	mvprintw(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 5, Map::DISPLAY - DIALOGUE_WIDTH + 25, "No");
+	
+	//take the user's input
+	move(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 5, Map::DISPLAY - DIALOGUE_WIDTH + 24);
+	bool menupos = false;
+	while (true) {
+		int ch = getch();
+		if (ch == LEFT) {
+			menupos = true;
+			move(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 5, Map::DISPLAY - DIALOGUE_WIDTH + 4);
+		}
+		if (ch == RIGHT) {
+			menupos = false;
+			move(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 5, Map::DISPLAY - DIALOGUE_WIDTH + 24);
+		}
+		if (ch == ENTER) break;
+	}
+
+	return menupos;
+}
 
 void turn_on_ncurses() {
 	initscr();//Start curses mode
@@ -22,44 +65,62 @@ void turn_on_ncurses() {
 	timeout(TIMEOUT); //Set a max delay for key entry
 }
 
+//places the player when a new floor starts, makes sure to not spawn them in a wall
+void start_pos(int &x, int &y, const Map &map) {
+	x = Map::WIDTH / 2;
+	y = Map::HEIGHT / 2;
+	for (int i = Map::HEIGHT / 2; i < Map::HEIGHT; i++) {
+		if (map.spot_data(x, i) == Map::OPEN) {
+			y = i;
+			break;
+		}
+	}
+	
+}
+
+
 int main() {
 	turn_on_ncurses();
 	Map map;
-	//map constants
-	const char HERO     = 'H';
-	const char MONSTER  = 'M';
-	const char WALL     = '#';
-	const char WATER    = '~';
-	const char OPEN     = '.';
-	const char TREASURE = '$';
+	//determine starting location
+	int x, y;
+	start_pos(x, y, map);
 	
-	int x = Map::SIZE / 2, y = Map::SIZE / 2; //Start in middle of the world
 	while (true) {
 		int ch = getch(); // Wait for user input, with TIMEOUT delay
 		if (ch == 'q' || ch == 'Q') break;
-		else if (ch == RIGHT && map.spot_data(x + 1, y) != WALL) {
+		else if (ch == RIGHT && map.spot_data(x + 1, y) != Map::WALL) {
 			x++;
-			if (y >= Map::SIZE) y = Map::SIZE - 1; //Clamp value
+			if (y >= Map::HEIGHT) y = Map::HEIGHT - 1; //Clamp value
 		}
-		else if (ch == LEFT && map.spot_data(x - 1, y) != WALL) {
+		else if (ch == LEFT && map.spot_data(x - 1, y) != Map::WALL) {
 			x--;
 			if (y < 0) y = 0;
 		}
-		else if (ch == UP && map.spot_data(x, y - 1) != WALL) {
+		else if (ch == UP && map.spot_data(x, y - 1) != Map::WALL) {
 			y--;
 			if (x < 0) x = 0;
 		}
-		else if (ch == DOWN && map.spot_data(x, y + 1) != WALL) {
+		else if (ch == DOWN && map.spot_data(x, y + 1) != Map::WALL) {
 			y++;
-			if (x >= Map::SIZE) x = Map::SIZE - 1; //Clamp value
+			if (x >= Map::WIDTH) x = Map::WIDTH - 1; //Clamp value
 		}
 		else if (ch == ERR) { //No keystroke
 			; //Do nothing
 		}
 		clear();
 		map.draw(x,y);
-		mvprintw(11,11,"X: %i Y: %i\n",x,y);
+		mvprintw(Map::DISPLAY + 1, Map::DISPLAY + 1,"X: %i Y: %i\n",x,y);
 		refresh();
+		if (is_stairs(map.spot_data(x, y))) {
+			if (descend(x, y, map)) {
+				map.init_map();
+				start_pos(x, y, map);
+			} else {
+				x -= 1;
+				y -= 3;
+			}
+		}
 		usleep(5000);
 	}
 	clear();

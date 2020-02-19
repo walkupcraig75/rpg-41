@@ -82,6 +82,7 @@ void start_pos(int &x, int &y, const Map &map) {
 int main() {
 	turn_on_ncurses();
 	Map map;
+	map.load_map();
 	//determine starting location
 	int x, y;
 	start_pos(x, y, map);
@@ -126,4 +127,5 @@ int main() {
 	clear();
 	endwin(); // End curses mode
 	system("clear");
+	map.save_map();
 }

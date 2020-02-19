@@ -23,6 +23,7 @@ void turn_on_ncurses() {
 }
 
 int main() {
+	cout << "Hello World\n";
 	turn_on_ncurses();
 	Map map;
 	//map constants

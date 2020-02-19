@@ -1,5 +1,6 @@
 #include "map.h"
 #include <unistd.h>
+#include <CircSLelement.h>
 
 const unsigned int TIMEOUT = 10; //Milliseconds to wait for a getch to finish
 const int UP = 65; //Key code for up arrow

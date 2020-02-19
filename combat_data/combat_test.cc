@@ -2,9 +2,16 @@
 #include "fighter.h"
 #include "monsters.h"
 #include "list.h"
+#include <CircSLelement.h>
+#include <Bridges.h>
 #include <iostream>
 using namespace std;
+using namespace bridges;
 
+//helper function for linked list
+CircSLelement<Fighter> *insertFront(
+			CircSLelement<Fighter> *tailElement,
+			CircSLelement<Fighter> *newElement);
 
 void die(string s = "INVALID INPUT!") {
     cout << s << endl;
@@ -31,13 +38,14 @@ void combat_mode() {
 	Fighter f("Haigen - The Troll", 100, 10, 2, 1);
 	Fighter d("The Wizard", 10, 2, 0.5, 1);
 
-	LL* head = new LL(f, nullptr);
-	insert(head, LL(d, nullptr));
+	CircSLelement<Fighter> *player = new CircSLelement<Fighter>(CircSLelement<Fighter>(Fighter("The Wizard", 10, 2, 0.5, 1), "Player"));
 
-	Fighter *active = &f;
-	Fighter *inactive = &d;
+	CircSLelement<Fighter> *encounter[] = {
+		new CircSLelement<Fighter>(Fighter("Haigen - The Troll", 100, 10, 2, 1), "Enemy"),
+		new CircSLelement<Fighter>(CircSLelement<Fighter>(Fighter("The Wizard", 10, 2, 0.5, 1), "Player"))
+	};
 	
-	cout << "\n ✳ " << active->get_name() << " goes first.\n";
+	cout << "\n ✳ " << encounter->getNext() << " goes first.\n";
 	
 	while (active->get_health() > 0){	
         cout << "\n (╯°□°)╯︵◓" << endl;
@@ -70,7 +78,6 @@ void combat_mode() {
     cout << endl;
     cout << "✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶✶\n";
 
-	delete head;
 }
 
 

@@ -5,6 +5,7 @@
 #include <CircSLelement.h>
 #include <Bridges.h>
 #include <iostream>
+#include <cmath>
 using namespace std;
 using namespace bridges;
 
@@ -35,29 +36,30 @@ void combat_mode() {
     cout << endl;
     system("figlet -f smblock BATTLE  | lolcat"); //prints title to the screen
     cout << "(ง'̀-'́)ง" << endl;
-	Fighter f("Haigen - The Troll", 100, 10, 2, 1);
-	Fighter d("The Wizard", 10, 2, 0.5, 1);
+	srand(time(0));
+	int encounter_size = rand() % 5 + 1;
+	CircSLelement<Fighter> *encounter = new CircSLelement<Fighter>(CircSLelement<Fighter>(Fighter("The Wizard", 100, 2, 0.5, 1), "Player"));
+	CircSLelement<Fighter> *temp = encounter;
+	for (int i = 0; i < encounter_size; i++) {
+		temp->setNext(new CircSLelement<Fighter>(Fighter("Goblin", 50, 1, 0.3, 4), "enemy"));
+		temp = temp->getNext();
+	}
+	temp->setNext(encounter);
 
-	CircSLelement<Fighter> *player = new CircSLelement<Fighter>(CircSLelement<Fighter>(Fighter("The Wizard", 10, 2, 0.5, 1), "Player"));
-
-	CircSLelement<Fighter> *encounter[] = {
-		new CircSLelement<Fighter>(Fighter("Haigen - The Troll", 100, 10, 2, 1), "Enemy"),
-		new CircSLelement<Fighter>(CircSLelement<Fighter>(Fighter("The Wizard", 10, 2, 0.5, 1), "Player"))
-	};
-	encounter[0]->setNext(encounter[1]);
-	encounter[1]->setNext(encounter[0]);
-	
-	CircSLelement<Fighter> *temp = encounter[0];
-	/*
+/*
+	temp = encounter;
 	while (true) {
 		cout << "\n ✳ " << temp->getValue() << " goes first.\n";
 		temp = temp->getNext();
 	}
-	*/
-	CircSLelement<Fighter> *active = encounter[0];
+*/
+	CircSLelement<Fighter> *active = encounter;
 	CircSLelement<Fighter> *inactive = active->getNext();
 	while (active->getValue().get_health() > 0){	
-        inactive = active->getNext();
+        if (active->getLabel() == "Player") inactive = active->getNext();
+		else inactive = encounter; //the first item in encounter is the player
+		
+
 		cout << "\n (╯°□°)╯︵◓" << endl;
         cout << "\n " << active->getValue().get_name() << " is attacking " << inactive->getValue().get_name() << endl;
         int damage = 1;
@@ -69,6 +71,7 @@ void combat_mode() {
         inactive->getValue().change_health(inactive->getValue().get_health() - damage);
         cout << inactive->getValue().get_health() << endl;
 		
+		if (inactive->getValue().get_health() <= 0) remove(inactive);
 		active = active->getNext();
 	}
 		

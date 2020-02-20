@@ -72,10 +72,10 @@ void pause(Map &map) {
 	
 	//take the user's input
 	move(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 5, Map::DISPLAY - DIALOGUE_WIDTH + 24);
-	bool menupos = 0;
+	int menupos = 0;
 	while (true) {
 		int ch = getch();
-		if (ch == UP && menupos > 0;) {
+		if (ch == UP && menupos > 0) {
 			menupos -= 1;
 		}
 		if (ch == DOWN && menupos < 3) {
@@ -131,9 +131,18 @@ bool combat() {
 }
 
 int main() {
-	turn_on_ncurses();
 	Map map;
-	map.load_map();
+	//ask the user if they want a new game or to continue
+	cout << "Do you want continue(y/n)?\n";
+	while (true) {
+		string start_type;
+		cin >> start_type;
+		if (start_type == "y" || start_type == "Y") {
+			map.load_map();
+			break;
+		} else if (start_type == "n" || start_type == "N") break;
+	}
+	turn_on_ncurses();
 	//determine starting location
 	int x, y;
 	start_pos(x, y, map);

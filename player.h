@@ -1,8 +1,9 @@
 #pragma once
 #include "combat_data/fighter.h"
+#include <unistd.h>
 using namespace std;
 
-class Hero : public Fighter() {
+class Hero : public Fighter {
 	protected:
 		int money;
 		int exp;
@@ -55,21 +56,12 @@ class Hero : public Fighter() {
 		int get_lvl() { return lvl; }
 		int get_money() { return money; }
 		
-		//getters (base stats)
-		int get_base_hp() { return base_hp; }
-		int get_base_attack() { return base_attack; }
-		float get_base_defense() { return base_defense; }
-		int get_base_speed() { return base_speed; }
-		//other getters
-		int get_exp() { return exp; }
-		int get_lvl() { return lvl; }
-
 		//increments base hp
 		void base_hp_inc() { this->base_hp++; }
 		//increments base attack
 		void base_attack_inc() { this->base_attack++; }
 		//increases base defense by 10%
-		void base_def_inc() { this->base_defense += (this->base_defense / 10.0; }
+		void base_def_inc() { this->base_defense += this->base_defense / 10.0; }
 		//increments base speed
 		void base_speed_inc() { this->base_hp = base_hp; }
 
@@ -81,4 +73,4 @@ class Hero : public Fighter() {
 				return true;
 			}
 		}
-}
+};

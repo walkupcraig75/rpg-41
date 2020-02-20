@@ -160,17 +160,10 @@ class Map {
 				//if (i == cursor_x && j == cursor_y)
 				//	attron(A_UNDERLINE | A_BOLD);
 				int color = 1;
-				if (view[i][j] == WALL)
-					color = 5;
-				else if (view[i][j] == WATER)
-					color = 2;
-				else if (view[i][j] == TREASURE)
-					color = 4;
-				else if (view[i][j] == MONSTER)
-					color = 6;
-				if (i == y && j == x) {
-					color = 3;
-				}
+				if (view[i][j] == WALL) color = 5;
+				else if (view[i][j] == MONSTER) color = 2;
+				else if (view[i][j] == TREASURE) color = 4;
+				
 				if (i == y && j == x) {
 					color = 3;
 					attron(COLOR_PAIR(color));

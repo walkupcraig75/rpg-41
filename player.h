@@ -13,6 +13,7 @@ class Hero : public Fighter {
 		float base_defense = 1.0;
 		int base_speed = 10;
 	public:
+		Hero() : Fighter(1, "PLAYER", 10, 5, 1.0, 10) {}
 		Hero(string name) : Fighter(1, name, 10, 5, 1.0, 10) {
 			//base stats
 			this->base_hp = base_hp;
@@ -73,4 +74,5 @@ class Hero : public Fighter {
 				return true;
 			}
 		}
+
 };

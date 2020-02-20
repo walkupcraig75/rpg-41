@@ -142,6 +142,7 @@ int main() {
 			break;
 		} else if (start_type == "n" || start_type == "N") break;
 	}
+
 	turn_on_ncurses();
 	//determine starting location
 	int x, y;

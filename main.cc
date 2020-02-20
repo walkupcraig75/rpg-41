@@ -1,4 +1,5 @@
 #include "map.h"
+#include "player.h"
 #include <unistd.h>
 
 const unsigned int TIMEOUT = 10; //Milliseconds to wait for a getch to finish
@@ -50,6 +51,51 @@ bool descend(int &x, int &y, Map &map) {
 	return menupos;
 }
 
+void pause(Map &map) {
+	//make the text box
+	int DIALOGUE_WIDTH = 25;
+	int DIALOGUE_HEIGHT = 17;
+	for (int i = 0; i < DIALOGUE_WIDTH; i++) {
+		for (int j = 0; j < DIALOGUE_HEIGHT; j++) {\
+			char c = ' ';
+			if (j == 0 || j == DIALOGUE_HEIGHT -1 ) c = '=';
+			else if (i == 0 || i == DIALOGUE_WIDTH - 1) c = '|';
+			mvaddch(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + j, Map::DISPLAY - DIALOGUE_WIDTH + 2  + i, c);
+		}
+	}
+	//print the content
+	mvprintw(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 1, Map::DISPLAY - DIALOGUE_WIDTH + 3, "Pause");
+	mvprintw(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 2, Map::DISPLAY - DIALOGUE_WIDTH + 5, "Continue");
+	mvprintw(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 4, Map::DISPLAY - DIALOGUE_WIDTH + 5, "Save");
+	mvprintw(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 6, Map::DISPLAY - DIALOGUE_WIDTH + 5, "Quit");
+	
+	//take the user's input
+	move(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + 5, Map::DISPLAY - DIALOGUE_WIDTH + 24);
+	bool menupos = 0;
+	while (true) {
+		int ch = getch();
+		if (ch == UP && menupos > 0;) {
+			menupos -= 1;
+		}
+		if (ch == DOWN && menupos < 3) {
+			menupos += 1;
+		}
+		if (ch == ENTER) break;
+		
+		move(Map::DISPLAY / 2 - DIALOGUE_HEIGHT / 2 + menupos * 2 + 2, Map::DISPLAY - DIALOGUE_WIDTH + 4);
+	}
+
+	if (menupos == 0) return;
+	else if (menupos == 1) map.save_map();
+	else if (menupos == 2) {
+		clear();
+		endwin(); 
+		system("clear");
+		exit(0);
+	}
+	
+}
+
 void turn_on_ncurses() {
 	initscr();//Start curses mode
 	start_color(); //Enable Colors if possible
@@ -78,6 +124,10 @@ void start_pos(int &x, int &y, const Map &map) {
 	
 }
 
+//If it doesn't compile after adding #include "combat_data.h" or whatever this is why
+bool combat() {
+	return true;
+}
 
 int main() {
 	turn_on_ncurses();
@@ -89,7 +139,9 @@ int main() {
 	
 	while (true) {
 		int ch = getch(); // Wait for user input, with TIMEOUT delay
-		if (ch == 'q' || ch == 'Q') break;
+		if (ch == 'q' || ch == 'Q') {
+			pause(map);
+		}
 		else if (ch == RIGHT && map.spot_data(x + 1, y) != Map::WALL) {
 			x++;
 			if (y >= Map::HEIGHT) y = Map::HEIGHT - 1; //Clamp value
@@ -121,6 +173,11 @@ int main() {
 				x -= 1;
 				y -= 3;
 			}
+		}
+
+		if (map.spot_data(x, y) == Map::MONSTER) {
+			if (combat()) map.set_spot(x, y, '.');
+			else break;
 		}
 		usleep(5000);
 	}

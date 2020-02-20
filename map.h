@@ -195,6 +195,11 @@ class Map {
 		assert(x < WIDTH && y < HEIGHT && x >= 0 && y >= 0);
 		return view[y][x];
 	}
+
+	void set_spot(int x, int y, char c) {
+		assert(x < WIDTH && y < HEIGHT && x >= 0 && y >= 0);
+		view[y][x] = c;
+	}
 	
 };
 

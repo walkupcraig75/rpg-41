@@ -52,7 +52,69 @@ bool descend(int &x, int &y, Map &map) {
 	return menupos;
 }
 
-void pause(Map &map) {
+//Saves the player
+void save_player(Hero &player) {
+		//Taken from stack verflow
+		std::ofstream ofs;
+		ofs.open("saved_player.txt", std::ofstream::out | std::ofstream::trunc);
+		ofs.close();
+		
+		ofstream outs("saved_player.txt");
+
+		string s = to_string(player.get_lvl());
+		outs << s << endl;
+
+		s = to_string(player.get_exp());
+		outs << s << endl;
+		
+		s = player.get_name();
+		outs << s << endl;
+		
+		s = to_string(player.get_base_hp());
+		outs << s << endl;
+
+		s = to_string(player.get_base_attack());
+		outs << s << endl;
+
+		s = to_string(player.get_base_defense());
+		outs << s << endl;
+		
+		s = to_string(player.get_base_speed());
+		outs << s << endl;
+		
+		s = to_string(player.get_money());
+		outs << s << endl;
+		
+		/*
+		s = to_string(player.get_attack());
+		outs << s << endl;
+		
+		s = to_string(player.get_defense());
+		outs << s << endl;
+		
+		s = to_string(player.get_speed());
+		outs << s << endl;
+		
+		s = to_string(player.get_health());
+		outs << s << endl;
+		*/
+}
+
+//Loading the player
+void load_player(Hero &player) {
+	ifstream ins("saved_player.txt");
+	vector<string> vec;
+	//Iterates through every field saved in the saved_player.txt file. 
+	for (int i = 0; i < 8; i++) {
+		string s;
+		getline(ins, s, '\n');
+		cout << s << endl;
+		vec.push_back(s);
+	}
+	player = Hero(stoi(vec.at(0)), stoi(vec.at(1)), vec.at(2), stoi(vec.at(3)), stoi(vec.at(4)), stof(vec.at(5)), stoi(vec.at(6)), stoi(vec.at(7)));
+} 
+
+void pause(Map &map, Hero &player) {
 	//make the text box
 	int DIALOGUE_WIDTH = 25;
 	int DIALOGUE_HEIGHT = 17;
@@ -87,7 +149,10 @@ void pause(Map &map) {
 	}
 
 	if (menupos == 0) return;
-	else if (menupos == 1) map.save_map();
+	else if (menupos == 1) {
+		map.save_map();
+		save_player(player);	
+	}
 	else if (menupos == 2) {
 		clear();
 		endwin(); 
@@ -132,13 +197,15 @@ bool combat() {
 
 int main() {
 	Map map;
+	Hero player;
 	//ask the user if they want a new game or to continue
-	cout << "Do you want continue(y/n)?\n";
+	cout << "Do you want to continue(y/n)?\n";
 	while (true) {
 		string start_type;
 		cin >> start_type;
 		if (start_type == "y" || start_type == "Y") {
 			map.load_map();
+			load_player(player);
 			break;
 		} else if (start_type == "n" || start_type == "N") break;
 	}
@@ -151,7 +218,7 @@ int main() {
 	while (true) {
 		int ch = getch(); // Wait for user input, with TIMEOUT delay
 		if (ch == 'q' || ch == 'Q') {
-			pause(map);
+			pause(map, player);
 		}
 		else if (ch == RIGHT && map.spot_data(x + 1, y) != Map::WALL) {
 			x++;
@@ -195,5 +262,4 @@ int main() {
 	clear();
 	endwin(); // End curses mode
 	system("clear");
-	map.save_map();
 }

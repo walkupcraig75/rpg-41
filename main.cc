@@ -114,6 +114,7 @@ void load_player(Hero &player) {
 	player = Hero(stoi(vec.at(0)), stoi(vec.at(1)), vec.at(2), stoi(vec.at(3)), stoi(vec.at(4)), stof(vec.at(5)), stoi(vec.at(6)), stoi(vec.at(7)));
 } 
 
+//Allows users to save, continue, or quit the game. 
 void pause(Map &map, Hero &player) {
 	//make the text box
 	int DIALOGUE_WIDTH = 25;
@@ -196,6 +197,7 @@ bool combat() {
 }
 
 int main() {
+	int level = 0;
 	Map map;
 	Hero player;
 	//ask the user if they want a new game or to continue
@@ -245,6 +247,8 @@ int main() {
 		refresh();
 		if (is_stairs(map.spot_data(x, y))) {
 			if (descend(x, y, map)) {
+				level++;
+				if (level == 5) break;
 				map.init_map();
 				start_pos(x, y, map);
 			} else {
@@ -259,6 +263,9 @@ int main() {
 		}
 		usleep(5000);
 	}
+
+
+
 	clear();
 	endwin(); // End curses mode
 	system("clear");
